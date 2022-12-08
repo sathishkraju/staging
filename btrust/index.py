@@ -80,11 +80,10 @@ def home():
               'Content-Type': 'application/json',
               'Authorization': f'Bearer {access_token}',
             }
-            response = requests.request("PATCH", url1, headers=headers1, data=payload1)
-            print(response)
+            response = requests.request("PATCH", url1, headers=headers1, data=payload1)           
     book = load_workbook("account_group.xlsx")
     sheet = book.active
-    return render_template('login.html',sheet=sheet,len = len(ulstr), ulstr = ulstr,gid=gid,glid=glid,passwd=passwd)   
+    return render_template('login.html',sheet=sheet,len = len(ulstr), ulstr = ulstr,gid=gid,glid=glid)   
 
 @app.route('/login',methods = ['POST'])  
 def login():  
