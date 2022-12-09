@@ -1,11 +1,13 @@
+from flask import *
+from openpyxl import load_workbook
 import requests
 import json
 import sys
-sys.path.append('../config')
-import config
+sys.path.append('apicommon')
+import apicommon
 import base64
 import xlsxwriter
-userpass = config.clientId+":"+config.skey
+userpass = apicommon.clientId+":"+apicommon.skey
 auth_access=base64.b64encode(userpass.encode()).decode()
 
 payload='grant_type=client_credentials'
@@ -13,7 +15,7 @@ headers = {
   'Authorization': "Basic :"+auth_access,
   'Content-Type': 'application/x-www-form-urlencoded',
 }
-response = requests.request("POST", config.aurl, headers=headers, data=payload)
+response = requests.request("POST", apicommon.aurl, headers=headers, data=payload)
 access_token = (json.loads(response.content)["access_token"])
 headers = {
     'Accept': 'application/json',
@@ -55,7 +57,8 @@ sheet_schedule.write(0,1,"Name",bold)
 for number in range(0, 100):
     if exNo==0:
         pNo = pNo+1
-        url = config.epurl+"/api/config/v1/vault/account-group?per_page="+str(perPage)+"&current_page="+str(pNo)
+        url = apicommon.epurl+"/api/config/v1/vault/account-group?per_page="+str(perPage)+"&current_page="+str(pNo)
+        print(url)
         cl_resp = requests.request("GET", url, headers=headers, data=payload)
         resp = json.loads(cl_resp.text)       
         tot_len=len(resp)        

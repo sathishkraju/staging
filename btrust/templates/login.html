@@ -1,4 +1,32 @@
-<html>  
+<html>
+<title>Beyond Trust Credentials Manager - NWN Carousel</title>
+<style type="text/css">
+	.txtfield{
+		border:1px solid #999;
+		padding:5px;
+		width:100%;
+	}
+	.btnfield{
+		border:1px solid #999;
+		padding:10px;
+		background-color:#1E4F87;
+		color:#fff;
+		border-radius:10px
+	}
+	table{
+		padding:0px;
+		border:1px solid #1E4F87;
+	}
+	th{
+		background-color:#1E4F87;
+		color:#fff;
+		padding:10px;
+		width:100%
+	}
+	table tr td{
+		padding:10px;
+	}
+</style>
 <head>
 	<script type="text/javascript">
 		function change_password(){
@@ -28,12 +56,13 @@
 </head>
 <body>  
 	<form action = "http://localhost:5000/account_group" method = "post" id="account_cred" name="account_cred"> 
-	<div style=" text-align:center;width:100%">
-		<table id="demo" width="75%" border="0" cellpadding="15" cellspacing="0" style="border:1px solid #999;margin:0px auto;margin-top:50px; background-color:">
+	<div style=" text-align:center;width:100%;margin-top:50px">
+		<table id="demo" width="75%" border="0" cellpadding="0" cellspacing="0" style="margin:0px auto;">
+			<th colspan="2">Manage Vault Credentials - Beyond Trust</th>
 			<tr>
-				<td>Account Group {{gid}} {{passwd}}</td>
-				<td>
-					<select name="group_account" onchange="this.form.submit()">
+				<td width="30%" align="right">Account Group {{gid}} {{passwd}}</td>
+				<td width="70%">
+					<select name="group_account" onchange="this.form.submit()" class="txtfield">
 					<option value="">Select Account Group</option>
 					{% for row in range(2, sheet.max_row + 1) %} 
 					<option value="{{ sheet.cell(row, 1).value }}" {% if gid == sheet.cell(row, 1).value %} selected="selected" {% endif %}>{{ sheet.cell(row, 2).value }}</option>
@@ -42,9 +71,9 @@
 				</td>
 			</tr>
 			<tr>
-				<td>Account {{glid}}</td>
+				<td align="right">Account {{glid}}</td>
 				<td>
-					<select name="group_account_list" onchange="this.form.submit()">
+					<select name="group_account_list" onchange="this.form.submit()" class="txtfield">
 						<option value="">Select Account </option>
 						<!-- For loop logic of jinja template -->
 						{%for i in range(0, len)%}
@@ -55,14 +84,14 @@
 				</td>
 			</tr>
 			<tr>
-				<td id="passid" style="display:block">Password : </td><td><input type="password" name="pass" id="pass" value=""><br/><span style="font-size:9px;color:#999">Passwords must be between 8 and 15 characters long and include at least one lowercase letter, one uppercase letter, one numeric digit, and one special character.</span></td>
+				<td id="passid" style="display:block" align="right">Password: </td><td><input type="password" name="pass" id="pass" value="" class="txtfield"><br/><span style="font-size:9px;color:#999">Passwords must be between 8 and 15 characters long and include at least one lowercase letter, one uppercase letter, one numeric digit, and one special character.</span></td>
 			</tr>
 			<tr>
-				<td id="repassid" style="display:block">Retype Password : </td><td><input type="password" name="re-pass" id="re-pass" value=""></td>
+				<td id="repassid" style="display:block" align="right">Retype Password: </td><td><input type="password" name="re-pass" id="re-pass" value="" class="txtfield"></td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
-				<td id="repassid" style="display:block" ><input type="button" name="pasword_change" value="submit" onclick="change_password()"></td>
+				<td id="repassid" style="display:block" ><input type="button" name="pasword_change" value="Check In and Change Password" onclick="change_password()" class="btnfield"></td>
 			</tr>
 		</table>
 	</div>

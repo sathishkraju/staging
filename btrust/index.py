@@ -71,6 +71,14 @@ def home():
                         exit
                 
         if passwd!="":
+            urlc = "https://nwncarousel.beyondtrustcloud.com/api/config/v1/vault/account/"+glid+"/force-check-in"
+            payloadc = ""
+            headersc = {
+              'Content-Type': 'application/json',
+              'Authorization': f'Bearer {access_token}',
+            }
+            responsec = requests.request("POST", urlc, headers=headersc, data=payloadc)
+            
             url1 = "https://nwncarousel.beyondtrustcloud.com/api/config/v1/vault/account/"+glid
             payload1 = json.dumps({
               "password": passwd,
@@ -81,7 +89,6 @@ def home():
               'Authorization': f'Bearer {access_token}',
             }
             response = requests.request("PATCH", url1, headers=headers1, data=payload1)
-            print(response)
     book = load_workbook("account_group.xlsx")
     sheet = book.active
     return render_template('login.html',sheet=sheet,len = len(ulstr), ulstr = ulstr,gid=gid,glid=glid,passwd=passwd)   
