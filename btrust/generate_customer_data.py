@@ -54,6 +54,7 @@ n=0
 sheet_schedule = xlsx_File.add_worksheet("Account Group")
 sheet_schedule.write(0,0,"Id",bold)
 sheet_schedule.write(0,1,"Name",bold)
+data = {}
 for number in range(0, 100):
     if exNo==0:
         pNo = pNo+1
@@ -65,16 +66,21 @@ for number in range(0, 100):
         if tot_len==perPage:
             for i in resp:
                 n=n+1                
-                sheet_schedule.write(n,0,str(i["id"]))
-                sheet_schedule.write(n,1,str(i["name"]))
+                data[str(i["id"])] = str(i["name"])
         elif tot_len<perPage:
             if exNo==0:
                 for i in resp:
                     n=n+1
-                    sheet_schedule.write(n,0,str(i["id"]))
-                    sheet_schedule.write(n,1,str(i["name"]))
+                    data[str(i["id"])] = str(i["name"])
                 exNo=1
                 tot_len=0
             else:
                 exit
+
+sort_data=dict(sorted(data.items(), key=lambda item: item[1].casefold()))
+k=1
+for key,value in sort_data.items():
+    sheet_schedule.write(k,0,str(key))
+    sheet_schedule.write(k,1,str(value))
+    k=k+1
 xlsx_File.close()    

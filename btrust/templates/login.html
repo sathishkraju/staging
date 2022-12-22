@@ -28,7 +28,9 @@
 	}
 </style>
 <head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script type="text/javascript">
+		
 		function change_password(){
 			pass=document.getElementById('pass').value;
 			repass=document.getElementById('re-pass').value;
@@ -50,6 +52,11 @@
 				alert("Password fields must be filled");
 				return false;
 			}
+			document.getElementById("action").value="password_reset";
+			document.getElementById("account_cred").submit();
+		}
+		function force_check_in(){
+			document.getElementById("action").value="checkin";
 			document.getElementById("account_cred").submit();
 		}
 	</script>
@@ -59,11 +66,13 @@
 	<div style=" text-align:center;width:100%;margin-top:50px">
 		<table id="demo" width="75%" border="0" cellpadding="0" cellspacing="0" style="margin:0px auto;">
 			<th colspan="2">Manage Vault Credentials - Beyond Trust</th>
+			<tr><td colspan="2"  align="center" {% if status1!="Success" %} style="font:weight:bold;color:red" {% else %} style="color:green"{% endif %}>{{status1_msg}}</td></tr>
+			<tr><td colspan="2" align="center" {% if status2!="Success" %} style="font:weight:bold;color:red" {% else %} style="color:green"{% endif %}>{{status2_msg}}</td></tr>
 			<tr>
-				<td width="30%" align="right">Account Group {{gid}} {{passwd}}</td>
+				<td width="30%" align="right">Account Group </td>
 				<td width="70%">
-					<select name="group_account" onchange="this.form.submit()" class="txtfield">
-					<option value="">Select Account Group</option>
+					<select name="group_account" id="group_account" onchange="this.form.submit()" class="txtfield">
+				    <option value="">Select Account Group </option>
 					{% for row in range(2, sheet.max_row + 1) %} 
 					<option value="{{ sheet.cell(row, 1).value }}" {% if gid == sheet.cell(row, 1).value %} selected="selected" {% endif %}>{{ sheet.cell(row, 2).value }}</option>
 					{% endfor %}
@@ -71,15 +80,18 @@
 				</td>
 			</tr>
 			<tr>
-				<td align="right">Account {{glid}}</td>
+				<td></td>
+				<td><a href="#" id="retrieve_group"> Get the latest Group data </a> <span id='wordResult'style="color:green;font-weight:bold;padding-left:10px"></span></td>
+			</tr>
+			<tr>
+				<td align="right">Account </td>
 				<td>
 					<select name="group_account_list" onchange="this.form.submit()" class="txtfield">
-						<option value="">Select Account </option>
-						<!-- For loop logic of jinja template -->
-						{%for i in range(0, len)%}
-						{% set item1, item2 = ulstr[i].split(',') %}
-							<option value="{{item1}}" {% if glid == item1 %} selected="selected" {% endif %}>{{ item2}}</option>
-						{%endfor%}
+						<option value="">Select Account List </option>
+						<!-- For loop logic of jinja template -->						
+							{% for key, value in ulstr.items() %}
+								<option value="{{key}}" {% if glid == key %} selected="selected" {% endif %}>{{ value}}</option>
+							{%endfor%}
 					</select>
 				</td>
 			</tr>
@@ -91,10 +103,35 @@
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
-				<td id="repassid" style="display:block" ><input type="button" name="pasword_change" value="Check In and Change Password" onclick="change_password()" class="btnfield"></td>
+				<td id="repassid" style="display:block" ><input type="button" name="pasword_change" value="Check In and Change Password" onclick="change_password()" class="btnfield">
+				<input type="button" name="check_in" value="Force Check In" onclick="force_check_in()" class="btnfield"></td>
 			</tr>
+						
 		</table>
 	</div>
+	<input type="hidden" name="action" id="action" value="">
 	</form>  
-</body>  
+</body> 
+  <script>
+    $(document).ready(function() {
+       $('#retrieve_group').click(function(){
+		   $("#wordResult").html("Updating the Account Group List");
+           $.ajax({
+           url: "/generate_group/",
+           type: "get",
+           success: function(response) {
+				$("#wordResult").html("Account Group is Updated Succesfully");
+				setTimeout(function() {
+				location.reload();
+				}, 5000);
+          },
+          error: function(xhr) {
+			alert("here");
+			alert(xhr.status);
+            //Do Something to handle error
+         }
+         });
+       });
+    });	
+  </script> 
 </html>
